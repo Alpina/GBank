@@ -1,0 +1,120 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="Frame.lua" />
+	<Frame name="Frame1" parent="UIParent" toplevel="true" enableMouse="true">
+		<Size>
+			<AbsDimension x="325" y="75" />
+		</Size>
+
+		<TitleRegion>
+		<Size x="325" y="75"/>
+			 <Anchors><Anchor point="TOP"/></Anchors>
+		</TitleRegion>
+
+		<Anchors>
+			<Anchor point="CENTER" />
+		</Anchors>
+
+		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" tile="true">
+			<BackgroundInsets>
+				<AbsInset left="11" right="12" top="12" bottom="11" />
+			</BackgroundInsets>
+			<TileSize>
+				<AbsValue val="32" />
+			</TileSize>
+			<EdgeSize>
+				<AbsValue val="32" />
+			</EdgeSize>
+		</Backdrop>
+		<Frames>
+			<EditBox name="EditBox1" inherits="InputBoxTemplate" multiLine="false" autoFocus="false">
+				<Size>
+					<AbsDimension x="290" y="24" />
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset x="20" y="-40" />
+					</Anchor>
+				</Anchors>
+			</EditBox>
+
+			<Button name="Button1" inherits="UIPanelButtonTemplate" text="Parse">
+				<Size>
+					<AbsDimension x="50" y="23" />
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset x="20" y="-15" />
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>Button1_OnClick();</OnClick>
+				</Scripts>
+			</Button>
+
+			<Button name="Button2" inherits="UIPanelButtonTemplate" text="x">
+				<Size>
+					<AbsDimension x="20" y="20" />
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset x="280" y="-15" />
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>Button2_OnClick();</OnClick>
+				</Scripts>
+			</Button>
+
+			<Button name="Button3" inherits="UIPanelButtonTemplate" text="Clear">
+				<Size>
+					<AbsDimension x="50" y="23" />
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset x="70" y="-15" />
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>Button3_OnClick();</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="Button4" inherits="UIPanelButtonTemplate" text="Print">
+				<Size>
+					<AbsDimension x="50" y="23" />
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset x="120" y="-15" />
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>Button4_OnClick();</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="Button5" inherits="UIPanelButtonTemplate" text="SEND">
+				<Size>
+					<AbsDimension x="50" y="23" />
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset x="190" y="-15" />
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>Button5_OnClick();</OnClick>
+				</Scripts>
+			</Button>
+
+
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				GBank_OnLoad();
+			</OnLoad>
+
+			<OnEvent>
+				GBank_OnEvent();
+			</OnEvent>
+		</Scripts>
+	</Frame>
+</Ui>
