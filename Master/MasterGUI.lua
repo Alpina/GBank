@@ -27,3 +27,12 @@ end
 function Button5_OnClick()
 	Sync_DB();
 end
+
+-- (6) Open Bank Table
+function Button6_OnClick()
+	if Frame2:IsShown() then
+		Frame2:Hide();
+	else
+		Frame2:Show();
+	end
+end

@@ -69,9 +69,9 @@ end
 -- Event registration
 ----------------------------------------
 function GBank_OnLoad()
-	Frame1:Hide();
 	Addon_Version = GetAddOnMetadata("GBank", "Version");
-
+	TextLine1:SetText("GBank v" .. Addon_Version);
+	
 	-- Global values DB clean run
 	if Buf_DB == nil then
 		Buf_DB = {};

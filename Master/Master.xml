@@ -1,38 +1,61 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="Frame.lua" />
-	<Frame name="Frame1" parent="UIParent" toplevel="true" enableMouse="true">
+
+	<Font name="Font_Normal" font="Fonts\FRIZQT__.TTF" virtual="true">
+		<Shadow>
+			<Offset>
+				<AbsDimension x="1" y="-1"/>
+			</Offset>
+			<Color r="0" g="0" b="0"/>
+		</Shadow>
+		<FontHeight>
+			<AbsValue val="12"/>
+		</FontHeight>
+	</Font>
+
+	<Frame name="Frame1" hidden="true" parent="UIParent" movable="true" enableMouse="true" frameStrata="DIALOG">
 		<Size>
-			<AbsDimension x="325" y="75" />
+			<AbsDimension x="300" y="70" />
 		</Size>
 
-		<TitleRegion>
-		<Size x="325" y="75"/>
-			 <Anchors><Anchor point="TOP"/></Anchors>
-		</TitleRegion>
-
 		<Anchors>
-			<Anchor point="CENTER" />
+			<Anchor point="CENTER"/>
 		</Anchors>
 
-		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" tile="true">
+		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\AddOns\GBank\Textures\UI-Toast-Border" tile="true">
 			<BackgroundInsets>
-				<AbsInset left="11" right="12" top="12" bottom="11" />
+				<AbsInset left="3" right="3" top="3" bottom="3"/>
 			</BackgroundInsets>
 			<TileSize>
-				<AbsValue val="32" />
+				<AbsValue val="9"/>
 			</TileSize>
 			<EdgeSize>
-				<AbsValue val="32" />
+				<AbsValue val="9"/>
 			</EdgeSize>
 		</Backdrop>
+
+		<Layers>
+			<Layer level="BORDER">
+				<FontString name="TextLine1" inherits="Font_Normal" justifyH="LEFT" justifyV="MIDDLE" text="test">
+					<Anchors>
+						<Anchor point="TOP">
+							<Offset>
+								<AbsDimension x="0" y="-5"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers> 
+
 		<Frames>
 			<EditBox name="EditBox1" inherits="InputBoxTemplate" multiLine="false" autoFocus="false">
 				<Size>
-					<AbsDimension x="290" y="24" />
+					<AbsDimension x="285" y="24" />
 				</Size>
 				<Anchors>
 					<Anchor point="TOPLEFT">
-						<Offset x="20" y="-40" />
+						<Offset x="10" y="-40" />
 					</Anchor>
 				</Anchors>
 			</EditBox>
@@ -43,7 +66,7 @@
 				</Size>
 				<Anchors>
 					<Anchor point="TOPLEFT">
-						<Offset x="20" y="-15" />
+						<Offset x="5" y="-18" />
 					</Anchor>
 				</Anchors>
 				<Scripts>
@@ -51,18 +74,25 @@
 				</Scripts>
 			</Button>
 
-			<Button name="Button2" inherits="UIPanelButtonTemplate" text="x">
+			<Button name="Button2">
 				<Size>
-					<AbsDimension x="20" y="20" />
+					<AbsDimension x="18" y="18"/>
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT">
-						<Offset x="280" y="-15" />
+					<Anchor point="TOPRIGHT">
+					<Offset>
+						<AbsDimension x="3" y="-4"/>
+					</Offset>
 					</Anchor>
 				</Anchors>
 				<Scripts>
-					<OnClick>Button2_OnClick();</OnClick>
+					<OnClick>
+						Frame1:Hide();
+					</OnClick>
 				</Scripts>
+				<NormalTexture file="Interface\AddOns\GBank\Textures\CloseButton-Normal"/>
+				<PushedTexture file="Interface\AddOns\GBank\Textures\CloseButton-Normal"/>
+				<HighlightTexture file="Interface\AddOns\GBank\Textures\CloseButton-Highlight" alphaMode="ADD"/>
 			</Button>
 
 			<Button name="Button3" inherits="UIPanelButtonTemplate" text="Clear">
@@ -71,7 +101,7 @@
 				</Size>
 				<Anchors>
 					<Anchor point="TOPLEFT">
-						<Offset x="70" y="-15" />
+						<Offset x="55" y="-18" />
 					</Anchor>
 				</Anchors>
 				<Scripts>
@@ -84,7 +114,7 @@
 				</Size>
 				<Anchors>
 					<Anchor point="TOPLEFT">
-						<Offset x="120" y="-15" />
+						<Offset x="105" y="-18" />
 					</Anchor>
 				</Anchors>
 				<Scripts>
@@ -97,7 +127,7 @@
 				</Size>
 				<Anchors>
 					<Anchor point="TOPLEFT">
-						<Offset x="190" y="-15" />
+						<Offset x="220" y="-18" />
 					</Anchor>
 				</Anchors>
 				<Scripts>
@@ -105,16 +135,63 @@
 				</Scripts>
 			</Button>
 
-
+			<Button name="Button6" inherits="UIPanelButtonTemplate" text=">>">
+				<Size>
+					<AbsDimension x="20" y="23" />
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset x="270" y="-18" />
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>Button6_OnClick();</OnClick>
+				</Scripts>
+			</Button>
 		</Frames>
 		<Scripts>
 			<OnLoad>
 				GBank_OnLoad();
+				this:RegisterForDrag("LeftButton");
 			</OnLoad>
 
 			<OnEvent>
 				GBank_OnEvent();
 			</OnEvent>
+
+			<OnDragStart>
+				this:StartMoving();
+			</OnDragStart>
+  			<OnDragStop>
+  				this:StopMovingOrSizing();
+  			</OnDragStop>
 		</Scripts>
+	</Frame>
+
+
+	<Frame name="Frame2" hidden="true" parent="Frame1" movable="true" enableMouse="true" frameStrata="DIALOG">
+		<Size>
+			<AbsDimension x="300" y="400" />
+		</Size>
+
+		<Anchors>
+			<Anchor point="BOTTOM" relativeTo="Frame1" relativePoint="BOTTOM">
+				<Offset>
+					<AbsDimension x="0" y="-400"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\AddOns\GBank\Textures\UI-Toast-Border" tile="true">
+			<BackgroundInsets>
+				<AbsInset left="3" right="3" top="3" bottom="3"/>
+			</BackgroundInsets>
+			<TileSize>
+				<AbsValue val="9"/>
+			</TileSize>
+			<EdgeSize>
+				<AbsValue val="9"/>
+			</EdgeSize>
+		</Backdrop>
 	</Frame>
 </Ui>
