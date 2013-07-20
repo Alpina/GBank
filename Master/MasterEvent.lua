@@ -71,7 +71,7 @@ end
 function GBank_OnLoad()
 	Frame1:Hide();
 	Addon_Version = GetAddOnMetadata("GBank", "Version");
-	
+
 	-- Global values DB clean run
 	if Buf_DB == nil then
 		Buf_DB = {};
@@ -138,9 +138,9 @@ function GBank_OnEvent()
 		if (arg1 == GBank_SEND) then
 			
 			if (arg4 ~= UnitName("player")) and (bool_mute == true) then
-				local _, _, player, id, suffix, count = string.find(arg2, "(%a+)%s(%d*)%s(%d*)%s(%d*)");
+				local _, _, player, id, suffix, count, price = string.find(arg2, "(%a+)%s(%d*)%s(%d*)%s(%d*)%s(%d*)");
 				
-				Receive_Update(player, id, suffix, count);
+				Receive_Update(player, id, suffix, count, price);
 			end
 
 			return

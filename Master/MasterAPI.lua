@@ -29,28 +29,27 @@ function Parse()
 			-- Get itemLink
 			local itemLink = GetContainerItemLink(bag, slot);
 			
-			if itemLink ~= nil then
+			if (itemLink ~= nil) then
 				-- Get slot info
 				local texture, itemCount, locked, quality, readable = GetContainerItemInfo(bag,slot);
 				local _, _, Color, Ltype, Id, Enchant, Suffix = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d*):?(%d*):?(%d*)");
 
 				-- Random enchanted suffix
-				if (bool_debug == true) and (Suffix ~= "0") then
+				if ((bool_debug == true) and (Suffix ~= "0")) then
 					ItemString_Show(Color, Ltype, Id, Enchant, Suffix);
 				end 
 
-				local Tmp = {};
-				Tmp[Suffix] = 0;
+				local Tmp_Suffix = {}; Tmp_Suffix[Suffix] = {["Price"] = 0, ["Count"] = 0};
 
-				if Local_Table[Id] == nil then
-					Local_Table[Id] = Tmp;
+				if (Local_Table[Id] == nil) then
+					Local_Table[Id] = Tmp_Suffix;
 				else
-					if Local_Table[Id][Suffix] == nil then
-						Local_Table[Id][Suffix] = 0;
+					if (Local_Table[Id][Suffix] == nil) then
+						Local_Table[Id][Suffix] = {["Price"] = 0, ["Count"] = 0};
 					end
 				end
 
-				Local_Table[Id][Suffix] = Local_Table[Id][Suffix] + itemCount;
+				Local_Table[Id][Suffix]["Count"] = Local_Table[Id][Suffix]["Count"] + itemCount;
 			end
 		end
 	end
@@ -101,7 +100,11 @@ function Print_Local_Table()
 		-- Get Name
 		local Name, Link, Rarity, Level, MinLevel, Type, SubType, StackCount = GetItemInfo(Id);
 
-		for Suffix, Count in pairs(Item) do
+		for Suffix, Params in pairs(Item) do
+
+			Price = Params["Price"];
+			Count = Params["Count"];
+
 			if (Suffix == nil) then
 				output = output .. Quality_Table[Rarity] .. a1 .. Id .. a2 .. Name .. a3 .. Count .. "\n";
 				DEFAULT_CHAT_FRAME:AddMessage("GBank: UNKNOWN RANDOM BONUS! id: " .. Id .. " suffix: " .. Suffix);
@@ -170,8 +173,8 @@ function Send_Data()
 	-- Send fresh table
 	for Player, ItemTable in pairs(DB) do
 		for Id, Item in pairs(ItemTable) do
-			for Chant, Count in pairs(Item) do
-				SendAddonMessage(GBank_SEND, Player .. " " .. Id .. " " .. Chant .. " " .. Count, "GUILD");
+			for Chant, Params in pairs(Item) do
+				SendAddonMessage(GBank_SEND, Player .. " " .. Id .. " " .. Chant .. " " .. Params["Count"] .. " " .. Params["Price"], "GUILD");
 			end
 		end
 	end
@@ -180,10 +183,10 @@ function Send_Data()
 end
 
 
-function Receive_Update(player, id, suffix, count)
+function Receive_Update(player, id, suffix, count, price)
 	count = tonumber(count);
 
-	if (id == nil) or (count == nil) or (player == nil) or (suffix == nil) then
+	if ((id == nil) or (count == nil) or (player == nil) or (suffix == nil) or (price == nil)) then
 		DEFAULT_CHAT_FRAME:AddMessage("Error in table updating! (nil in the received values)");
 		return;
 	end
@@ -194,13 +197,13 @@ function Receive_Update(player, id, suffix, count)
 	end
 	
 	local Tmp = {};
-	Tmp[suffix] = count;
+	Tmp[suffix] = {["Count"] = count, ["Price"] = price};
 
 	-- Add data in to DB
 	if (Buf_Table[id] == nil) then
 		Buf_Table[id] = Tmp;
 	else
-		Buf_Table[id][suffix] = count;
+		Buf_Table[id][suffix] = {["Count"] = count, ["Price"] = price};
 	end
 
 	Buf_DB[player] = Buf_Table;
