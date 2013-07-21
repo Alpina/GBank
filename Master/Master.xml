@@ -193,5 +193,77 @@
 				<AbsValue val="9"/>
 			</EdgeSize>
 		</Backdrop>
+
+		<Frames>
+ 			<ScrollFrame name="ScrollFrameTest" parent="Frame2" virtual="true">
+				<Anchors>
+  					<Anchor point="TOPLEFT">
+    					<Offset>
+      						<AbsDimension x="8" y="-8"/>
+    					</Offset>
+  					</Anchor>
+  			
+  					<Anchor point="BOTTOMRIGHT">
+    					<Offset>
+      						<AbsDimension x="-25" y="8"/>
+    					</Offset>
+  					</Anchor>
+				</Anchors>
+					
+					<Layers>
+						<Layer level="BACKGROUND">
+							<Texture setAllPoints="true">
+								<Color r="0.0" g="0.0" b="0.0"/>
+							</Texture>
+						</Layer>
+					</Layers>
+			<Frames>
+				<Slider name="ScrollFrameTest_VSlider" orientation="VERTICAL" minValue="0" maxValue="100" defaultValue="0" valueStep="1">
+					<Size x="25" y="400"/>
+					<Anchors>
+						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="ScrollFrameTest"/>
+					</Anchors>
+				
+					<Scripts>
+						<OnValueChanged>
+  							ScrollFrameTest:SetVerticalScroll(this:GetValue())
+						</OnValueChanged>
+					</Scripts>
+				
+					<ThumbTexture name="$parentThumbTexture" file="Interface\Buttons\UI-ScrollBar-Knob">
+						<Size x="25" y="25"/>
+					</ThumbTexture>
+				</Slider>
+
+			</Frames>
+				<ScrollChild>
+					<Frame>
+					<Size x="250" y="250"/>
+						
+						<Layers>
+							<Layer level="ARTWORK">
+								<Texture file="Interface\Icons\Ability_creature_poison_01">
+									<Size x="100" y="100"/>
+								
+									<Anchors>
+										<Anchor point="CENTER"/>
+									</Anchors>
+								</Texture>
+
+								<FontString name="TextLine1" inherits="Font_Normal" justifyH="LEFT" justifyV="MIDDLE" text="test">
+									<Anchors>
+										<Anchor point="TOP">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+							</Layer>
+						</Layers>
+					</Frame>
+				</ScrollChild>
+			</ScrollFrame>
+ 		</Frames>
 	</Frame>
 </Ui>
