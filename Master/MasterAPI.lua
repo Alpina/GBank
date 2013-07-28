@@ -14,6 +14,10 @@ Quality_Table = {
 -- BB-Code Random Chant color
 Random_Chant_Str1 = " [Color=#489FDA][b]";
 Random_Chant_Str2 = "[/b][/color]";
+Price_Str1 = "[b][color=yellow]";
+Price_Str2 = "[/color] [color=lime]";
+Price_Str3 = "[/color][/b]";
+
 -- BB-Code string's
 a1 = "[url=http://db.valkyrie-wow.com/?item="; a2 = "]"; a3 = "[/url] - ";
 Buf_Table = {};
@@ -111,9 +115,19 @@ function Print_Local_Table()
 			else
 				if (Suffix ~= "0") then
 					-- With random chant
-					output = output .. Quality_Table[Rarity] .. a1 .. Id .. a2 .. Name .. a3 .. Count .. Random_Chant_Str1 .. "(" .. Enchant_Suffix_Table[Suffix] .. ")" .. Random_Chant_Str2 .. "\n";
+					if (Price_Table[Id] == nil) then
+						output = output .. Quality_Table[Rarity] .. a1 .. Id .. a2 .. Name .. a3 .. Count .. Random_Chant_Str1 .. "(" .. Enchant_Suffix_Table[Suffix] .. ")" .. Random_Chant_Str2 .. "\n";
+					else
+						output = output .. Quality_Table[Rarity] .. a1 .. Id .. a2 .. Name .. a3 .. Count 
+						.. Random_Chant_Str1 .. "(" .. Enchant_Suffix_Table[Suffix] .. ")" .. Random_Chant_Str2 .. ", " .. Price_Str1 .. "Price for " .. Price_Table[Id]["Count"] .. " items:" .. Price_Str2 .. Price_Table[Id]["Price"] .. Price_Str3 .. "\n";
+					end
 				else
-					output = output .. Quality_Table[Rarity] .. a1 .. Id .. a2 .. Name .. a3 .. Count .. "\n";
+					if (Price_Table[Id] == nil) then
+						output = output .. Quality_Table[Rarity] .. a1 .. Id .. a2 .. Name .. a3 .. Count .. "\n";
+					else
+						output = output .. Quality_Table[Rarity] .. a1 .. Id .. a2 .. Name .. a3 .. Count 
+						.. ", " .. Price_Str1 .. "Price for " .. Price_Table[Id]["Count"] .. " items:" .. Price_Str2 .. Price_Table[Id]["Price"] .. Price_Str3 .. "\n";
+					end
 				end
 			end
 		end

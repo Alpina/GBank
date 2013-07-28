@@ -1,5 +1,5 @@
 ## Title: GBank
-## Version: 2.004
+## Version: 2.005
 ## Author: Alpina
 ## Interface: 11200
 ## Notes: Addon to help organize the guild bank. By|cff6495ED Alpinka|r
