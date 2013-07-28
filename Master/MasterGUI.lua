@@ -36,3 +36,8 @@ function Button6_OnClick()
 		Frame2:Show();
 	end
 end
+
+-- (7) Print Price list
+function Button7_OnClick()
+	Print_Price_Table();
+end

@@ -120,6 +120,19 @@
 				<Scripts>
 					<OnClick>Button4_OnClick();</OnClick>
 				</Scripts>
+			</Button>			
+			<Button name="Button7" inherits="UIPanelButtonTemplate" text="Price List">
+				<Size>
+					<AbsDimension x="55" y="23" />
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset x="155" y="-18" />
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>Button7_OnClick();</OnClick>
+				</Scripts>
 			</Button>
 			<Button name="Button5" inherits="UIPanelButtonTemplate" text="SEND">
 				<Size>

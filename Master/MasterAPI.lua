@@ -136,6 +136,17 @@ function Print_Local_Table()
 	EditBox1:SetText(output);
 end
 
+function Print_Price_Table()
+	output = "";
+
+	for Id, Params in pairs(Price_Table) do
+		local Name, Link, Rarity, Level, MinLevel, Type, SubType, StackCount = GetItemInfo(Id);
+
+		output = output .. Quality_Table[Rarity] .. a1 .. Id .. a2 .. Name .. a3 .. Price_Str1 .. "Price for " .. Params["Count"] .. " items:".. Price_Str2 .. Params["Price"] .. " dkp" .. Price_Str3 .. "\n";
+	end
+
+	EditBox1:SetText(output);
+end
 ----------------------------------------
 -- DB Syncronization functions
 ----------------------------------------
