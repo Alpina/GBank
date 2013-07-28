@@ -212,8 +212,16 @@
 					
 					<Layers>
 						<Layer level="BACKGROUND">
-							<Texture setAllPoints="true">
-								<Color r="0.0" g="0.0" b="0.0"/>
+							<Texture>
+								<Size x="0.2" y="385"/>
+								<Anchors>
+									<Anchor point="TOPRIGHT">
+										<Offset>
+											<AbsDimension x="-45" y="0"/>
+										</Offset>
+									</Anchor>
+								</Anchors>
+								<Color r="0.83" g="0.69" b="0.22"/>
 							</Texture>
 						</Layer>
 					</Layers>
@@ -239,22 +247,34 @@
 				<ScrollChild>
 					<Frame>
 					<Size x="250" y="250"/>
-						
 						<Layers>
 							<Layer level="ARTWORK">
-								<Texture file="Interface\Icons\Ability_creature_poison_01">
-									<Size x="100" y="100"/>
-								
+								<FontString name="TextLine1" inherits="Font_Normal" justifyH="LEFT" justifyV="MIDDLE" text="Item">
 									<Anchors>
-										<Anchor point="CENTER"/>
-									</Anchors>
-								</Texture>
-
-								<FontString name="TextLine1" inherits="Font_Normal" justifyH="LEFT" justifyV="MIDDLE" text="test">
-									<Anchors>
-										<Anchor point="TOP">
+										<Anchor point="TOPLEFT">
 											<Offset>
-												<AbsDimension x="0" y="-5"/>
+												<AbsDimension x="5" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+
+								<FontString name="TextLine1" inherits="Font_Normal" justifyH="LEFT" justifyV="MIDDLE" text="Count">
+									<Anchors>
+										<Anchor point="TOPRIGHT">
+											<Offset>
+												<AbsDimension x="-30" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+
+
+								<FontString name="TextLine1" inherits="Font_Normal" justifyH="LEFT" justifyV="MIDDLE" text="Price">
+									<Anchors>
+										<Anchor point="TOPRIGHT">
+											<Offset>
+												<AbsDimension x="2" y="-5"/>
 											</Offset>
 										</Anchor>
 									</Anchors>

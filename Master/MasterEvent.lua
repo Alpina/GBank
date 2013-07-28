@@ -63,6 +63,22 @@ SlashCmdList["BLAH"] = function(msg)
 			SELECTED_CHAT_FRAME:AddMessage("Sorting is|cffff0000 on|r");
 		end
 	end
+
+	-- (5) Set Price
+	if (string.find(msg, "p") == 1) then
+		
+		local _, _, Color, Ltype, Id, Enchant, Suffix, par1, Name, Price = string.find(msg, "^p%s|?c?f?f?(%x*)|?H?([^:]*):?(%d*):?(%d*):?(%d*):?(%d*)|?h?([^|]*)|?h|?r%s(%d*)") 	
+
+		if (Price == nil) then
+			SELECTED_CHAT_FRAME:AddMessage("|cffff0000Err|r: Please, type Price after ItemLink.");
+		else
+			SELECTED_CHAT_FRAME:AddMessage("Item Id: " .. Id .. " name: " .. Name .. ", Price = " .. Price);
+			if (Price_Table == nil) then
+				Price_Table = {};
+			end
+			Price_Table[Id] = Price;
+		end
+	end
 end
 
 ----------------------------------------

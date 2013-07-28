@@ -1,5 +1,5 @@
 ## Title: GBank
-## Version: 2.003
+## Version: 2.004
 ## Author: Alpina
 ## Interface: 11200
 ## Notes: Addon to help organize the guild bank. By|cff6495ED Alpinka|r
@@ -15,6 +15,8 @@
 ## SavedVariables: DB
 ## SavedVariables: DB_Timestamp
 ## SavedVariables: DB_Unique
+
+## SavedVariables: Price_Table
 
 Master\Master.lua
 Master\MasterGUI.lua
