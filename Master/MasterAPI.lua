@@ -17,6 +17,7 @@ Random_Chant_Str2 = "[/b][/color]";
 Price_Str1 = "[b][color=yellow]";
 Price_Str2 = "[/color] [color=lime]";
 Price_Str3 = "[/color][/b]";
+Price_Str4 = "[b][color=red]";
 
 -- BB-Code string's
 a1 = "[url=http://db.valkyrie-wow.com/?item="; a2 = "]"; a3 = "[/url] - ";
@@ -141,8 +142,12 @@ function Print_Price_Table()
 
 	for Id, Params in pairs(Price_Table) do
 		local Name, Link, Rarity, Level, MinLevel, Type, SubType, StackCount = GetItemInfo(Id);
-
-		output = output .. Quality_Table[Rarity] .. a1 .. Id .. a2 .. Name .. a3 .. Price_Str1 .. "Price for " .. Params["Count"] .. " items:".. Price_Str2 .. Params["Price"] .. " dkp" .. Price_Str3 .. "\n";
+		if (Params["Need"] == "0") then
+			output = output .. Quality_Table[Rarity] .. a1 .. Id .. a2 .. Name .. a3 .. Price_Str1 .. "Price for " .. Params["Count"] .. " items:".. Price_Str2 .. Params["Price"] .. " dkp" .. Price_Str3 .. "\n";
+		else
+			output = output .. Quality_Table[Rarity] .. a1 .. Id .. a2 .. Name .. a3 .. Price_Str1 .. "Price for " .. Params["Count"] .. " items:".. Price_Str2 .. Params["Price"] .. " dkp." 
+			.. Price_Str3 .. Price_Str4 .. " Items Need: " .. Params["Need"] .. Price_Str3 .. "\n";
+		end
 	end
 
 	EditBox1:SetText(output);

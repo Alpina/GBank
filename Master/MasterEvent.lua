@@ -67,26 +67,23 @@ SlashCmdList["BLAH"] = function(msg)
 	-- (5) Set Price
 	if (string.find(msg, "p") == 1) then
 
-		local _, _, Color, Ltype, Id, Enchant, Suffix, par1, Name, Price, Count = string.find(msg, "^p%s|?c?f?f?(%x*)|?H?([^:]*):?(%d*):?(%d*):?(%d*):?(%d*)|?h?([^|]*)|?h|?r%s(%d*)%s(%d*)") 	
+		local _, _, Color, Ltype, Id, Enchant, Suffix, par1, Name, Price, Count, Need = string.find(msg, "^p%s|?c?f?f?(%x*)|?H?([^:]*):?(%d*):?(%d*):?(%d*):?(%d*)|?h?([^|]*)|?h|?r%s(%d*)%s(%d*)%s(%d*)") 	
 
-		if (Price == nil) then
+		if (Price == nil) or (Count == nil) or (Need == nil) then
 			SELECTED_CHAT_FRAME:AddMessage("|cffff0000Err|r: Please, type price after ItemLink and count.");
 		else
-			if (Count == nil) then				
-				SELECTED_CHAT_FRAME:AddMessage("Item Id: " .. Id .. " name: " .. Name .. ", Price = " .. Price .. " for 1 item.");
-				if (Price_Table == nil) then
-					Price_Table = {};
-				end
-				Params = {["Price"] = Price, ["Count"] = 1};
-				Price_Table[Id] = Params;
+			if (Need == "0") then
+				SELECTED_CHAT_FRAME:AddMessage("Item Id: " .. Id .. " name: " .. Name .. ", Price = " .. Price .. " for " .. Count .. " items.");
 			else
-				SELECTED_CHAT_FRAME:AddMessage("Item Id: " .. Id .. " name: " .. Name .. ", Price = " .. Price .. " for " .. Count .. " item.");
-				if (Price_Table == nil) then
-					Price_Table = {};
-				end
-				Params = {["Price"] = Price, ["Count"] = Count};
-				Price_Table[Id] = Params;
+				SELECTED_CHAT_FRAME:AddMessage("Item Id: " .. Id .. " name: " .. Name .. ", Price = " .. Price .. " for " .. Count .. " items. Need: " .. Need .. " items.");
 			end
+
+			if (Price_Table == nil) then
+				Price_Table = {};
+			end
+
+			Params = {["Price"] = Price, ["Count"] = Count, ["Need"] = Need};
+			Price_Table[Id] = Params;
 		end
 	end
 end
