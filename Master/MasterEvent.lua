@@ -19,6 +19,8 @@ SlashCmdList["BLAH"] = function(msg)
     	SELECTED_CHAT_FRAME:AddMessage("/gb |c40e0d000d|rebug");
     	SELECTED_CHAT_FRAME:AddMessage("/gb |c40e0d000v|rersion");
     	SELECTED_CHAT_FRAME:AddMessage("/gb |c40e0d000S|rorting");
+    	SELECTED_CHAT_FRAME:AddMessage("/gb |c40e0d000P|rice [itemLink] [Price] [Count] [Need Count]");
+    	SELECTED_CHAT_FRAME:AddMessage("/gb |c40e0d000B|DKP [Name]");
     end	
 
     -- (1) Set visibility
@@ -82,9 +84,15 @@ SlashCmdList["BLAH"] = function(msg)
 				Price_Table = {};
 			end
 
-			Params = {["Price"] = Price, ["Count"] = Count, ["Need"] = Need};
+			Params = {["itemName"] = Name, ["Price"] = Price, ["Count"] = Count, ["Need"] = Need};
 			Price_Table[Id] = Params;
 		end
+	end
+
+	-- (6) Get player BDKP
+	if (string.find(msg, "b") == 1) then
+		local _, _, Name = string.find(msg, "^b%s(%S+)");
+
 	end
 end
 
@@ -119,6 +127,9 @@ function GBank_OnLoad()
 	end
 	if Mail_Table == nil then
 		Mail_Table = {};
+	end
+	if BDKP_Table == nil then
+		BDKP_Table = {};
 	end
 
 	this:RegisterEvent("CHAT_MSG_ADDON");

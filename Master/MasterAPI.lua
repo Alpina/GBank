@@ -141,11 +141,11 @@ function Print_Price_Table()
 	output = "";
 
 	for Id, Params in pairs(Price_Table) do
-		local Name, Link, Rarity, Level, MinLevel, Type, SubType, StackCount = GetItemInfo(Id);
+		local _, Link, Rarity, Level, MinLevel, Type, SubType, StackCount = GetItemInfo(Id);
 		if (Params["Need"] == "0") then
-			output = output .. Quality_Table[Rarity] .. a1 .. Id .. a2 .. Name .. a3 .. Price_Str1 .. "Price for " .. Params["Count"] .. " items:".. Price_Str2 .. Params["Price"] .. " dkp" .. Price_Str3 .. "\n";
+			output = output .. Quality_Table[Rarity] .. a1 .. Id .. a2 .. Params["itemName"] .. a3 .. Price_Str1 .. "Price for " .. Params["Count"] .. " items:".. Price_Str2 .. Params["Price"] .. " dkp" .. Price_Str3 .. "\n";
 		else
-			output = output .. Quality_Table[Rarity] .. a1 .. Id .. a2 .. Name .. a3 .. Price_Str1 .. "Price for " .. Params["Count"] .. " items:".. Price_Str2 .. Params["Price"] .. " dkp." 
+			output = output .. Quality_Table[Rarity] .. a1 .. Id .. a2 .. Params["itemName"] .. a3 .. Price_Str1 .. "Price for " .. Params["Count"] .. " items:".. Price_Str2 .. Params["Price"] .. " dkp." 
 			.. Price_Str3 .. Price_Str4 .. " Items Need: " .. Params["Need"] .. Price_Str3 .. "\n";
 		end
 	end
