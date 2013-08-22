@@ -20,7 +20,7 @@ SlashCmdList["BLAH"] = function(msg)
     	SELECTED_CHAT_FRAME:AddMessage("/gb |c40e0d000v|rersion");
     	SELECTED_CHAT_FRAME:AddMessage("/gb |c40e0d000S|rorting");
     	SELECTED_CHAT_FRAME:AddMessage("/gb |c40e0d000P|rice [itemLink] [Price] [Count] [Need Count]");
-    	SELECTED_CHAT_FRAME:AddMessage("/gb |c40e0d000B|DKP [Name]");
+    	SELECTED_CHAT_FRAME:AddMessage("/gb |c40e0d000B|rDKP [Name]");
     end	
 
     -- (1) Set visibility

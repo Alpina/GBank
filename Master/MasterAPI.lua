@@ -259,4 +259,30 @@ function Scan_MailBox()
 			end
 		end
 	end
+
+	if (GetInboxNumItems() > 0) and (Mail_Table ~= nil) and (Price_Table ~= nil) then
+		for slot, Params in pairs(Mail_Table) do
+			
+			if (Params["Name"] ~= nil) then
+				Name = "["..Params["Name"].."]";
+			end
+
+			for id, Price_Params in pairs(Price_Table) do
+				if (Name == Price_Params["itemName"]) then
+					
+					Price = tonumber(Price_Params["Price"]);
+					Count = tonumber(Price_Params["Count"]);
+					
+					if (Count ~= 0) then
+						Price = Price / Count;
+						Price = Price * tonumber(Params["Count"]);
+
+						DEFAULT_CHAT_FRAME:AddMessage("|c40e0d000BDKP:|r" .. " sender |c0000ff00" .. Params["Sender"] .. "|r can recive |c0000ff00" .. Price .. "|r BDKP (" .. Price_Params["Count"] .. "x " .. Price_Params["itemName"] .. ")");
+					else
+						DEFAULT_CHAT_FRAME:AddMessage("Err: division by zero (Count = 0)");
+					end
+				end
+			end
+		end
+	end
 end
