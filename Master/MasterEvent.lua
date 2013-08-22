@@ -117,6 +117,9 @@ function GBank_OnLoad()
 	if Price_Table == nil then
 		Price_Table = {};
 	end
+	if Mail_Table == nil then
+		Mail_Table = {};
+	end
 
 	this:RegisterEvent("CHAT_MSG_ADDON");
 	this:RegisterEvent("PLAYER_LOGIN");
@@ -148,6 +151,10 @@ function GBank_OnEvent()
 		bool_bank_is_open = false;
 		Button1:Disable();
 		return;
+	end
+
+	if (event == "MAIL_INBOX_UPDATE") then
+		Scan_MailBox();
 	end
 
 	-- Resive addon messages

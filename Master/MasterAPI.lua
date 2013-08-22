@@ -240,3 +240,23 @@ function Receive_Update(player, id, suffix, count, price)
 
 	return;
 end
+
+----------------------------------------
+-- Mail functions
+----------------------------------------
+function Scan_MailBox()
+
+	if (GetInboxNumItems() > 0) then
+		Mail_Table = {};
+		
+		for slot = 1, GetInboxNumItems() do
+			name, itemTexture, count, quality = GetInboxItem(slot, 1);
+			packageIcon, stationeryIcon, sender, subject, money, CODAmount, daysLeft, hasItem, wasRead, wasReturned, textCreated, canReply = GetInboxHeaderInfo(slot);
+			Mail_Table[slot] = {["Name"] = name, ["Count"] = count, ["Sender"] = sender};
+
+			if (bool_debug == true) then
+				DEFAULT_CHAT_FRAME:AddMessage(debug_string .. sender .. " " .. name .. " " .. count .. " " .. quality);
+			end
+		end
+	end
+end
