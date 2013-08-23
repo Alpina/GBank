@@ -291,7 +291,7 @@ function Scan_MailBox()
 								end
 
 							else
-								DEFAULT_CHAT_FRAME:AddMessage("Err: division by zero (Count = 0)");
+								DEFAULT_CHAT_FRAME:AddMessage("|cffff0000Error:|r Division by zero! Price is not correct.");
 							end
 						end
 					end
@@ -311,7 +311,6 @@ function Search_Mail(id, count)
 
 	for slot, params in pairs(Mail_Table) do
 		if (Name == params["Name"]) and (count == params["Count"]) then
-			DEFAULT_CHAT_FRAME:AddMessage(params["Sender"] .. " send " .. params["Count"] .. "x " .. params["Name"]);
 			return params["Sender"];
 		end
 	end
@@ -376,6 +375,40 @@ function Check_Bags(bag_id)
 	end
 end
 
-function Change_BDKP(id, count)
-	Sender = Search_Mail(id, count);
+function Change_BDKP(id, count_input)
+	Sender = Search_Mail(id, count_input);
+	
+	if (Sender ~= nil) then
+		if (BDKP_Table[Sender] == nil) then
+			BDKP_Table[Sender] = 0;
+		end
+		if (BDKP_Log[Sender] == nil) then
+			BDKP_Log[Sender] = {};
+		end
+
+		local Name, Link, Rarity, Level, MinLevel, Type, SubType, StackCount = GetItemInfo(id);
+		Name = "["..Name.."]";
+		for id, Price_Params in pairs(Price_Table) do
+			if (Name == Price_Params["itemName"]) then
+					
+				Price = tonumber(Price_Params["Price"]);
+				Count = tonumber(Price_Params["Count"]);
+					
+				if (Count ~= 0) then
+					Price = (Price / Count) * count_input;
+							
+					if (Price ~= 0) then
+						DEFAULT_CHAT_FRAME:AddMessage("|c40e0d000BDKP:|r" .. " |c0000ff00" .. Sender .. "|r +|c0000ff00" .. Price .. "|r BDKP (" .. count_input .. "x " .. Name .. ")");
+						-- 
+						Timestamp = time();
+						BDKP_Log[Sender][Timestamp] = {["id"] = id, ["Count"] = count_input, ["dkp"] = Price, ["itemName"] = Name};
+						-- 
+						BDKP_Table[Sender] = BDKP_Table[Sender] + Price;
+					end
+				else
+					DEFAULT_CHAT_FRAME:AddMessage("|cffff0000Error:|r Division by zero! Price is not correct.");
+				end
+			end
+		end
+	end
 end

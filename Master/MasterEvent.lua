@@ -143,6 +143,9 @@ function GBank_OnLoad()
 	if BDKP_Table == nil then
 		BDKP_Table = {};
 	end
+	if BDKP_Log == nil then
+		BDKP_Log = {};
+	end
 
 	this:RegisterEvent("CHAT_MSG_ADDON");
 	this:RegisterEvent("PLAYER_LOGIN");
