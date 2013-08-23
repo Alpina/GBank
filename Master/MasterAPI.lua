@@ -301,8 +301,6 @@ end
 -- Bags functions
 ----------------------------------------
 function Check_Bags(bag_id)
-
-	-- Full check
 	if (bag_id == -1) then
 
 		for bag = -1, 11 do
@@ -324,9 +322,8 @@ function Check_Bags(bag_id)
 		return;
 	end
 
-	-- Check the 'bag_id' bag :)
 	if (bag_id ~= -1) then
-		
+
 		Bags_Table_Buf = {};
 
 		if (bag_id < 12) and (bag_id > -2) then
@@ -338,32 +335,27 @@ function Check_Bags(bag_id)
 					local _, _, Color, Ltype, id, enchantednt, Suffix = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d*):?(%d*):?(%d*)");
 
 					Bags_Table_Buf[slot] = {["id"] = id, ["count"] = count};
-					Bags_Table[bag_id][slot]  = {["id"] = id, ["count"] = count};
 				end
 			end
 		end
 
-		-- Begin compare
 		for slot, param in pairs(Bags_Table_Buf) do
-
-			before = 0;
-			post = 0;
-
+			Result = 0;
 			if (Bags_Table[bag_id][slot] == nil) then
-				before = 0;
+				Change_BDKP(tonumber(param["id"]), tonumber(Bags_Table_Buf[slot]["count"]));
+				Check_Bags(-1);
+				return;
 			else
-				before = Bags_Table[bag_id][slot]["count"];
+				if (Bags_Table[bag_id][slot]["count"] ~= Bags_Table_Buf[slot]["count"]) then
+					Change_BDKP(tonumber(param["id"]), tonumber(Bags_Table_Buf[slot]["count"])-tonumber(Bags_Table[bag_id][slot]["count"]));
+					Check_Bags(-1);
+					return;
+				end
 			end
-
-			post = Bags_Table_Buf[slot]["count"];
-
-			if (before ~= post) then
-				result = tonumber(post) - tonumber(before);
-				DEFAULT_CHAT_FRAME:AddMessage("Add " .. param["id"] .. " +" .. result);
-			end
-		end
-
-		Check_Bags(-1);
-		return;
+		end	
 	end
+end
+
+function Change_BDKP(id, count)
+	DEFAULT_CHAT_FRAME:AddMessage("ID: " .. id .. " +" .. count);
 end
