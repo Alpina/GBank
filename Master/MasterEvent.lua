@@ -20,7 +20,7 @@ SlashCmdList["BLAH"] = function(msg)
     	SELECTED_CHAT_FRAME:AddMessage("/gb |c40e0d000v|rersion");
     	SELECTED_CHAT_FRAME:AddMessage("/gb |c40e0d000s|rorting");
     	SELECTED_CHAT_FRAME:AddMessage("/gb |c40e0d000p|rice [itemLink] [Price] [Count] [Need Count]");
-    	SELECTED_CHAT_FRAME:AddMessage("/gb |c40e0d000b|rDKP [Name]");
+    	SELECTED_CHAT_FRAME:AddMessage("/gb |c40e0d000bdkp|r [Name]");
     	SELECTED_CHAT_FRAME:AddMessage("/gb |c40e0d000bdkp help|r");
     end	
 
@@ -91,9 +91,15 @@ SlashCmdList["BLAH"] = function(msg)
 	end
 
 	-- (6) Get player BDKP
-	if (string.find(msg, "b") == 1) then
-		local _, _, Name = string.find(msg, "^b%s(%S+)");
-
+	if (string.find(msg, "bdkp") == 1) then
+		local _, _, Name = string.find(msg, "^bdkp%s(%S+)");
+		if (Name ~= "help") then
+			if (BDKP_Table[Name] ~= nil) then
+				SELECTED_CHAT_FRAME:AddMessage("|c40e0d000BDKP:|r|c0000ff00 " .. Name .. "|r dkp = |c0000ff00" .. BDKP_Table[Name] .. "|r");
+			else
+				SELECTED_CHAT_FRAME:AddMessage("|c40e0d000BDKP:|r|c0000ff00 " .. Name .. "|r dkp = |c0000ff000|r");
+			end
+		end
 	end
 
 	-- (7) On\Off BDKP Help
