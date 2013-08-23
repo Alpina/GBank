@@ -244,42 +244,47 @@ end
 ----------------------------------------
 -- Mail functions
 ----------------------------------------
+bool_load_mail = 0;
+
 function Scan_MailBox()
-
-	if (GetInboxNumItems() > 0) then
-		Mail_Table = {};
+	if (bool_load_mail < GetInboxNumItems()) then
+		bool_load_mail = bool_load_mail + 1;
+	else
+		if (GetInboxNumItems() > 0) then
+			Mail_Table = {};
 		
-		for slot = 1, GetInboxNumItems() do
-			name, itemTexture, count, quality = GetInboxItem(slot, 1);
-			packageIcon, stationeryIcon, sender, subject, money, CODAmount, daysLeft, hasItem, wasRead, wasReturned, textCreated, canReply = GetInboxHeaderInfo(slot);
-			Mail_Table[slot] = {["Name"] = name, ["Count"] = count, ["Sender"] = sender};
+			for slot = 1, GetInboxNumItems() do
+				name, itemTexture, count, quality = GetInboxItem(slot, 1);
+				packageIcon, stationeryIcon, sender, subject, money, CODAmount, daysLeft, hasItem, wasRead, wasReturned, textCreated, canReply = GetInboxHeaderInfo(slot);
+				Mail_Table[slot] = {["Name"] = name, ["Count"] = count, ["Sender"] = sender};
 
-			if (bool_debug == true) then
-				DEFAULT_CHAT_FRAME:AddMessage(debug_string .. sender .. " " .. name .. " " .. count .. " " .. quality);
+				if (bool_debug == true) then
+					DEFAULT_CHAT_FRAME:AddMessage(debug_string .. sender .. " " .. name .. " " .. count .. " " .. quality);
+				end
 			end
 		end
-	end
 
-	if (GetInboxNumItems() > 0) and (Mail_Table ~= nil) and (Price_Table ~= nil) then
-		for slot, Params in pairs(Mail_Table) do
+		if (GetInboxNumItems() > 0) and (Mail_Table ~= nil) and (Price_Table ~= nil) then
+			for slot, Params in pairs(Mail_Table) do
 			
-			if (Params["Name"] ~= nil) then
-				Name = "["..Params["Name"].."]";
-			end
+				if (Params["Name"] ~= nil) then
+					Name = "["..Params["Name"].."]";
+				end
 
-			for id, Price_Params in pairs(Price_Table) do
-				if (Name == Price_Params["itemName"]) then
+				for id, Price_Params in pairs(Price_Table) do
+					if (Name == Price_Params["itemName"]) then
 					
-					Price = tonumber(Price_Params["Price"]);
-					Count = tonumber(Price_Params["Count"]);
+						Price = tonumber(Price_Params["Price"]);
+						Count = tonumber(Price_Params["Count"]);
 					
-					if (Count ~= 0) then
-						Price = Price / Count;
-						Price = Price * tonumber(Params["Count"]);
+						if (Count ~= 0) and (Params["Sender"] ~= nil) then
+							Price = Price / Count;
+							Price = Price * tonumber(Params["Count"]);
 
-						DEFAULT_CHAT_FRAME:AddMessage("|c40e0d000BDKP:|r" .. " sender |c0000ff00" .. Params["Sender"] .. "|r can recive |c0000ff00" .. Price .. "|r BDKP (" .. Price_Params["Count"] .. "x " .. Price_Params["itemName"] .. ")");
-					else
-						DEFAULT_CHAT_FRAME:AddMessage("Err: division by zero (Count = 0)");
+							DEFAULT_CHAT_FRAME:AddMessage("|c40e0d000BDKP:|r" .. " sender |c0000ff00" .. Params["Sender"] .. "|r can recive |c0000ff00" .. Price .. "|r BDKP (" .. Params["Count"] .. "x " .. Price_Params["itemName"] .. ")");
+						else
+							DEFAULT_CHAT_FRAME:AddMessage("Err: division by zero (Count = 0)");
+						end
 					end
 				end
 			end
