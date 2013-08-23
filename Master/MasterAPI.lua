@@ -28,6 +28,8 @@ Buf_Name = "";
 Bags_Table = {};
 Bags_Table_Buf = {};
 bool_item_recive = false;
+bool_mail_bdkp_help = true;
+bool_mail_bdkp_help_first = false;
 
 -----------------------------------------
 -- Parser Function
@@ -266,33 +268,51 @@ function Scan_MailBox()
 			end
 		end
 
-		if (GetInboxNumItems() > 0) and (Mail_Table ~= nil) and (Price_Table ~= nil) then
-			for slot, Params in pairs(Mail_Table) do
+		if (bool_mail_bdkp_help == true) then
+			if (GetInboxNumItems() > 0) and (Mail_Table ~= nil) and (Price_Table ~= nil) then
+				for slot, Params in pairs(Mail_Table) do
 			
-				if (Params["Name"] ~= nil) then
-					Name = "["..Params["Name"].."]";
-				end
+					if (Params["Name"] ~= nil) then
+						Name = "["..Params["Name"].."]";
+					end
 
-				for id, Price_Params in pairs(Price_Table) do
-					if (Name == Price_Params["itemName"]) then
+					for id, Price_Params in pairs(Price_Table) do
+						if (Name == Price_Params["itemName"]) then
 					
-						Price = tonumber(Price_Params["Price"]);
-						Count = tonumber(Price_Params["Count"]);
+							Price = tonumber(Price_Params["Price"]);
+							Count = tonumber(Price_Params["Count"]);
 					
-						if (Count ~= 0) and (Params["Sender"] ~= nil) then
-							Price = Price / Count;
-							Price = Price * tonumber(Params["Count"]);
+							if (Count ~= 0) and (Params["Sender"] ~= nil) then
+								Price = Price / Count;
+								Price = Price * tonumber(Params["Count"]);
 							
-							if (Price ~= 0) then
-								DEFAULT_CHAT_FRAME:AddMessage("|c40e0d000BDKP:|r" .. " sender |c0000ff00" .. Params["Sender"] .. "|r can recive |c0000ff00" .. Price .. "|r BDKP (" .. Params["Count"] .. "x " .. Price_Params["itemName"] .. ")");
-							end
+								if (Price ~= 0) then
+									DEFAULT_CHAT_FRAME:AddMessage("|c40e0d000BDKP:|r" .. " sender |c0000ff00" .. Params["Sender"] .. "|r can recive |c0000ff00" .. Price .. "|r BDKP (" .. Params["Count"] .. "x " .. Price_Params["itemName"] .. ")");
+								end
 
-						else
-							DEFAULT_CHAT_FRAME:AddMessage("Err: division by zero (Count = 0)");
+							else
+								DEFAULT_CHAT_FRAME:AddMessage("Err: division by zero (Count = 0)");
+							end
 						end
 					end
 				end
 			end
+
+			if (bool_mail_bdkp_help_first == false) then
+				bool_mail_bdkp_help_first = true;
+				bool_mail_bdkp_help = false;
+			end
+		end
+	end
+end
+
+function Search_Mail(id, count)
+	local Name, Link, Rarity, Level, MinLevel, Type, SubType, StackCount = GetItemInfo(id);
+
+	for slot, params in pairs(Mail_Table) do
+		if (Name == params["Name"]) and (count == params["Count"]) then
+			DEFAULT_CHAT_FRAME:AddMessage(params["Sender"] .. " send " .. params["Count"] .. "x " .. params["Name"]);
+			return params["Sender"];
 		end
 	end
 end
@@ -357,5 +377,5 @@ function Check_Bags(bag_id)
 end
 
 function Change_BDKP(id, count)
-	DEFAULT_CHAT_FRAME:AddMessage("ID: " .. id .. " +" .. count);
+	Sender = Search_Mail(id, count);
 end

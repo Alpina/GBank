@@ -18,9 +18,10 @@ SlashCmdList["BLAH"] = function(msg)
     	SELECTED_CHAT_FRAME:AddMessage("/gb |c40e0d000s|rhow");
     	SELECTED_CHAT_FRAME:AddMessage("/gb |c40e0d000d|rebug");
     	SELECTED_CHAT_FRAME:AddMessage("/gb |c40e0d000v|rersion");
-    	SELECTED_CHAT_FRAME:AddMessage("/gb |c40e0d000S|rorting");
-    	SELECTED_CHAT_FRAME:AddMessage("/gb |c40e0d000P|rice [itemLink] [Price] [Count] [Need Count]");
-    	SELECTED_CHAT_FRAME:AddMessage("/gb |c40e0d000B|rDKP [Name]");
+    	SELECTED_CHAT_FRAME:AddMessage("/gb |c40e0d000s|rorting");
+    	SELECTED_CHAT_FRAME:AddMessage("/gb |c40e0d000p|rice [itemLink] [Price] [Count] [Need Count]");
+    	SELECTED_CHAT_FRAME:AddMessage("/gb |c40e0d000b|rDKP [Name]");
+    	SELECTED_CHAT_FRAME:AddMessage("/gb |c40e0d000bdkp help|r");
     end	
 
     -- (1) Set visibility
@@ -94,7 +95,18 @@ SlashCmdList["BLAH"] = function(msg)
 		local _, _, Name = string.find(msg, "^b%s(%S+)");
 
 	end
-end
+
+	-- (7) On\Off BDKP Help
+	if (msg == "bdkp help") then
+		if (bool_mail_bdkp_help == false) then
+			bool_mail_bdkp_help = true;
+			SELECTED_CHAT_FRAME:AddMessage("|c40e0d000BDKP Mail Help|r is|cffff0000 on|r");
+		else
+			bool_mail_bdkp_help = false;
+			SELECTED_CHAT_FRAME:AddMessage("|c40e0d000BDKP Mail Help|r is|c0000ff00 off|r");
+		end
+	end
+end 
 
 ----------------------------------------
 -- Event registration
