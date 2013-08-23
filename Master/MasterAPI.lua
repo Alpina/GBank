@@ -23,6 +23,12 @@ Price_Str4 = "[b][color=red]";
 a1 = "[url=http://db.valkyrie-wow.com/?item="; a2 = "]"; a3 = "[/url] - ";
 Buf_Table = {};
 Buf_Name = "";
+
+-- Bags Tables
+Bags_Table = {};
+Bags_Table_Buf = {};
+bool_item_recive = false;
+
 -----------------------------------------
 -- Parser Function
 -----------------------------------------
@@ -257,10 +263,6 @@ function Scan_MailBox()
 				name, itemTexture, count, quality = GetInboxItem(slot, 1);
 				packageIcon, stationeryIcon, sender, subject, money, CODAmount, daysLeft, hasItem, wasRead, wasReturned, textCreated, canReply = GetInboxHeaderInfo(slot);
 				Mail_Table[slot] = {["Name"] = name, ["Count"] = count, ["Sender"] = sender};
-
-				if (bool_debug == true) then
-					DEFAULT_CHAT_FRAME:AddMessage(debug_string .. sender .. " " .. name .. " " .. count .. " " .. quality);
-				end
 			end
 		end
 
@@ -280,8 +282,11 @@ function Scan_MailBox()
 						if (Count ~= 0) and (Params["Sender"] ~= nil) then
 							Price = Price / Count;
 							Price = Price * tonumber(Params["Count"]);
+							
+							if (Price ~= 0) then
+								DEFAULT_CHAT_FRAME:AddMessage("|c40e0d000BDKP:|r" .. " sender |c0000ff00" .. Params["Sender"] .. "|r can recive |c0000ff00" .. Price .. "|r BDKP (" .. Params["Count"] .. "x " .. Price_Params["itemName"] .. ")");
+							end
 
-							DEFAULT_CHAT_FRAME:AddMessage("|c40e0d000BDKP:|r" .. " sender |c0000ff00" .. Params["Sender"] .. "|r can recive |c0000ff00" .. Price .. "|r BDKP (" .. Params["Count"] .. "x " .. Price_Params["itemName"] .. ")");
 						else
 							DEFAULT_CHAT_FRAME:AddMessage("Err: division by zero (Count = 0)");
 						end
@@ -289,5 +294,76 @@ function Scan_MailBox()
 				end
 			end
 		end
+	end
+end
+
+----------------------------------------
+-- Bags functions
+----------------------------------------
+function Check_Bags(bag_id)
+
+	-- Full check
+	if (bag_id == -1) then
+
+		for bag = -1, 11 do
+			for slot = 1, GetContainerNumSlots(bag) do
+				local itemLink = GetContainerItemLink(bag, slot);
+				
+				if (itemLink ~= nil) then
+					local texture, count, locked, quality, readable = GetContainerItemInfo(bag, slot);
+					local _, _, Color, Ltype, id, enchantednt, Suffix = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d*):?(%d*):?(%d*)");
+
+					
+					if (Bags_Table[bag] == nil) then
+						Bags_Table[bag] = {};	
+					end 
+					Bags_Table[bag][slot] = {["id"] = id, ["count"] = count};
+				end
+			end
+		end
+		return;
+	end
+
+	-- Check the 'bag_id' bag :)
+	if (bag_id ~= -1) then
+		
+		Bags_Table_Buf = {};
+
+		if (bag_id < 12) and (bag_id > -2) then
+			for slot = 1, GetContainerNumSlots(bag_id) do
+				local itemLink = GetContainerItemLink(bag_id, slot);
+				
+				if (itemLink ~= nil) then
+					local texture, count, locked, quality, readable = GetContainerItemInfo(bag_id, slot);
+					local _, _, Color, Ltype, id, enchantednt, Suffix = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d*):?(%d*):?(%d*)");
+
+					Bags_Table_Buf[slot] = {["id"] = id, ["count"] = count};
+					Bags_Table[bag_id][slot]  = {["id"] = id, ["count"] = count};
+				end
+			end
+		end
+
+		-- Begin compare
+		for slot, param in pairs(Bags_Table_Buf) do
+
+			before = 0;
+			post = 0;
+
+			if (Bags_Table[bag_id][slot] == nil) then
+				before = 0;
+			else
+				before = Bags_Table[bag_id][slot]["count"];
+			end
+
+			post = Bags_Table_Buf[slot]["count"];
+
+			if (before ~= post) then
+				result = tonumber(post) - tonumber(before);
+				DEFAULT_CHAT_FRAME:AddMessage("Add " .. param["id"] .. " +" .. result);
+			end
+		end
+
+		Check_Bags(-1);
+		return;
 	end
 end

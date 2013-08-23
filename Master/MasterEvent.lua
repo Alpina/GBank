@@ -138,6 +138,8 @@ function GBank_OnLoad()
 	this:RegisterEvent("BANKFRAME_CLOSED");
 	this:RegisterEvent("MAIL_SHOW");
 	this:RegisterEvent("MAIL_INBOX_UPDATE");
+
+	this:RegisterEvent("BAG_UPDATE");
 end
 
 
@@ -147,6 +149,7 @@ end
 function GBank_OnEvent()
 	-- Show login message
 	if (event == "PLAYER_LOGIN") then
+		Check_Bags(-1); -- scan all bags
 		SELECTED_CHAT_FRAME:AddMessage("GBank by|cff6495ED Alpinka|r |cff7fff7f" .. Addon_Version .. "|r loaded. Use |cff6495ED/gb|r to open UI.");
 		return;
 	end
@@ -165,8 +168,19 @@ function GBank_OnEvent()
 	end
 
 	if (event == "MAIL_INBOX_UPDATE") then
+		bool_item_recive = true;
 		Scan_MailBox();
+		return;
 	end
+	-------------------------------------------------------------
+	if (event == "BAG_UPDATE") then
+		if (bool_item_recive == true) then
+			Check_Bags(arg1);
+			bool_item_recive = false;
+		end
+		return;
+	end
+	-------------------------------------------------------------
 
 	-- Resive addon messages
 	if (event == "CHAT_MSG_ADDON") then
