@@ -38,6 +38,7 @@ SlashCmdList["BLAH"] = function(msg)
 			Frame1:Show();
 			Login_Updates_Check();
 		end
+		return;
 	end
 
     -- (2) Set debug
@@ -49,11 +50,13 @@ SlashCmdList["BLAH"] = function(msg)
 			bool_debug = false;
 			SELECTED_CHAT_FRAME:AddMessage("Debug is|c0000ff00 off|r");
 		end
+		return;
 	end
 
 	-- (3) Show version
 	if (msg == "ver") or (msg == "v") or (msg == "version") then
 		SELECTED_CHAT_FRAME:AddMessage("GBank ver |cffff0000" .. Addon_Version .. "|r");
+		return;
 	end
 
 	-- (4) Eneble\Disable sorting
@@ -65,29 +68,88 @@ SlashCmdList["BLAH"] = function(msg)
 			bool_sorting = true;
 			SELECTED_CHAT_FRAME:AddMessage("Sorting is|cffff0000 on|r");
 		end
+		return;
 	end
 
 	-- (5) Set Price
 	if (string.find(msg, "p") == 1) then
-
-		local _, _, Color, Ltype, Id, Enchant, Suffix, par1, Name, Price, Count, Need = string.find(msg, "^p%s|?c?f?f?(%x*)|?H?([^:]*):?(%d*):?(%d*):?(%d*):?(%d*)|?h?([^|]*)|?h|?r%s(%d*)%s(%d*)%s(%d*)") 	
-
-		if (Price == nil) or (Count == nil) or (Need == nil) then
-			SELECTED_CHAT_FRAME:AddMessage("|cffff0000Err|r: Please, type price after ItemLink and count.");
-		else
-			if (Need == "0") then
-				SELECTED_CHAT_FRAME:AddMessage("Item Id: " .. Id .. " name: " .. Name .. ", Price = " .. Price .. " for " .. Count .. " items.");
+		local _, _, Color, Ltype, Id, Enchant, Suffix, par1, Name, Price, Count, Need = string.find(msg, "^p%s|?c?f?f?(%x*)|?H?([^:]*):?(%d*):?(%d*):?(%d*):?(%d*)|?h?([^|]*)|?h|?r%s(%d*)%s(%d*)%s(%d*)");
+		
+		if (Color ~= nil) and (Ltype ~= nil) and (Id ~= nil) and (Enchant ~= nil) and (Suffix ~= nil) and (Name ~= nil) then
+			if (Price == nil) or (Count == nil) or (Need == nil) then
+				SELECTED_CHAT_FRAME:AddMessage("|cffff0000Err|r: Please, type price after ItemLink and count.");
 			else
-				SELECTED_CHAT_FRAME:AddMessage("Item Id: " .. Id .. " name: " .. Name .. ", Price = " .. Price .. " for " .. Count .. " items. Need: " .. Need .. " items.");
+				if (Need == "0") and (Count == "0") and (Price == "0") then
+					-- (5.1) del item
+					if (Price_Table[Id] ~= nil) then
+						Buf_Price_Table = {};
+						for table_Id, Params in pairs(Price_Table) do
+							if (table_Id ~= Id) then
+								Buf_Price_Table[Id] = Params;
+							end
+						end
+						Price_Table = Buf_Price_Table;
+						SELECTED_CHAT_FRAME:AddMessage("Delete " .. Name .. " form price table." );
+						return;
+					end
+				end
+
+				if (Need == "0") then
+					SELECTED_CHAT_FRAME:AddMessage("Item Id: " .. Id .. " name: " .. Name .. ", Price = " .. Price .. " for " .. Count .. " items.");
+				else
+					SELECTED_CHAT_FRAME:AddMessage("Item Id: " .. Id .. " name: " .. Name .. ", Price = " .. Price .. " for " .. Count .. " items. Need: " .. Need .. " items.");
+				end
+
+				if (Price_Table == nil) then
+					Price_Table = {};
+				end
+
+				Params = {["itemName"] = Name, ["Price"] = Price, ["Count"] = Count, ["Need"] = Need};
+				Price_Table[Id] = Params;
+			end
+		else
+			local _, _, Id, Price, Count, Need = string.find(msg, "^p%s(%d*)%s(%d*)%s(%d*)%s(%d*)");
+			
+			if (Need == "0") and (Count == "0") and (Price == "0") then
+				-- (5.1) del item
+				if (Price_Table[Id] ~= nil) then
+					Buf_Price_Table = {};
+					for table_Id, Params in pairs(Price_Table) do
+						if (table_Id ~= Id) then
+							Buf_Price_Table[Id] = Params;
+						end
+					end
+					Price_Table = Buf_Price_Table;
+					local Name, Link, Rarity, Level, MinLevel, Type, SubType, StackCount = GetItemInfo(Id);
+					SELECTED_CHAT_FRAME:AddMessage("Delete [" .. Name .. "] form price table." );
+					return;
+				end
 			end
 
-			if (Price_Table == nil) then
-				Price_Table = {};
-			end
+			if (Price == nil) or (Count == nil) or (Need == nil) then
+				SELECTED_CHAT_FRAME:AddMessage("|cffff0000Err|r: Please, type price after ItemLink and count.");
+			else
+				local Name, Link, Rarity, Level, MinLevel, Type, SubType, StackCount = GetItemInfo(Id);
+				
+				if (Name ~= nil) then
+					if (Need == "0") then
+						SELECTED_CHAT_FRAME:AddMessage("Item Id: " .. Id .. " name: [" .. Name .. "], Price = " .. Price .. " for " .. Count .. " items.");
+					else
+						SELECTED_CHAT_FRAME:AddMessage("Item Id: " .. Id .. " name: [" .. Name .. "], Price = " .. Price .. " for " .. Count .. " items. Need: " .. Need .. " items.");
+					end
 
-			Params = {["itemName"] = Name, ["Price"] = Price, ["Count"] = Count, ["Need"] = Need};
-			Price_Table[Id] = Params;
+					if (Price_Table == nil) then
+						Price_Table = {};
+					end
+
+					Params = {["itemName"] = "["..Name.."]", ["Price"] = Price, ["Count"] = Count, ["Need"] = Need};
+					Price_Table[Id] = Params;
+				else
+					SELECTED_CHAT_FRAME:AddMessage("Item not avable, check your ID.");
+				end
+			end
 		end
+		return;
 	end
 
 	-- (6) Get player BDKP
@@ -100,6 +162,7 @@ SlashCmdList["BLAH"] = function(msg)
 				SELECTED_CHAT_FRAME:AddMessage("|c40e0d000BDKP:|r|c0000ff00 " .. Name .. "|r dkp = |c0000ff000|r");
 			end
 		end
+		return;
 	end
 
 	-- (7) On\Off BDKP Help
@@ -111,6 +174,7 @@ SlashCmdList["BLAH"] = function(msg)
 			bool_mail_bdkp_help = false;
 			SELECTED_CHAT_FRAME:AddMessage("|c40e0d000BDKP Mail Help|r is|c0000ff00 off|r");
 		end
+		return;
 	end
 end 
 
