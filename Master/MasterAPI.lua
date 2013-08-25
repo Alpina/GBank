@@ -23,6 +23,14 @@ Price_Str4 = "[b][color=red]";
 a1 = "[url=http://db.valkyrie-wow.com/?item="; a2 = "]"; a3 = "[/url] - ";
 Buf_Table = {};
 Buf_Name = "";
+
+-- Bags Tables
+Bags_Table = {};
+Bags_Table_Buf = {};
+bool_item_recive = false;
+bool_mail_bdkp_help = true;
+bool_mail_bdkp_help_first = false;
+
 -----------------------------------------
 -- Parser Function
 -----------------------------------------
@@ -141,11 +149,11 @@ function Print_Price_Table()
 	output = "";
 
 	for Id, Params in pairs(Price_Table) do
-		local Name, Link, Rarity, Level, MinLevel, Type, SubType, StackCount = GetItemInfo(Id);
+		local _, Link, Rarity, Level, MinLevel, Type, SubType, StackCount = GetItemInfo(Id);
 		if (Params["Need"] == "0") then
-			output = output .. Quality_Table[Rarity] .. a1 .. Id .. a2 .. Name .. a3 .. Price_Str1 .. "Price for " .. Params["Count"] .. " items:".. Price_Str2 .. Params["Price"] .. " dkp" .. Price_Str3 .. "\n";
+			output = output .. Quality_Table[Rarity] .. a1 .. Id .. a2 .. Params["itemName"] .. a3 .. Price_Str1 .. "Price for " .. Params["Count"] .. " items:".. Price_Str2 .. Params["Price"] .. " dkp" .. Price_Str3 .. "\n";
 		else
-			output = output .. Quality_Table[Rarity] .. a1 .. Id .. a2 .. Name .. a3 .. Price_Str1 .. "Price for " .. Params["Count"] .. " items:".. Price_Str2 .. Params["Price"] .. " dkp." 
+			output = output .. Quality_Table[Rarity] .. a1 .. Id .. a2 .. Params["itemName"] .. a3 .. Price_Str1 .. "Price for " .. Params["Count"] .. " items:".. Price_Str2 .. Params["Price"] .. " dkp." 
 			.. Price_Str3 .. Price_Str4 .. " Items Need: " .. Params["Need"] .. Price_Str3 .. "\n";
 		end
 	end
@@ -239,4 +247,168 @@ function Receive_Update(player, id, suffix, count, price)
 	Buf_DB[player] = Buf_Table;
 
 	return;
+end
+
+----------------------------------------
+-- Mail functions
+----------------------------------------
+bool_load_mail = 0;
+
+function Scan_MailBox()
+	if (bool_load_mail < GetInboxNumItems()) then
+		bool_load_mail = bool_load_mail + 1;
+	else
+		if (GetInboxNumItems() > 0) then
+			Mail_Table = {};
+		
+			for slot = 1, GetInboxNumItems() do
+				name, itemTexture, count, quality = GetInboxItem(slot, 1);
+				packageIcon, stationeryIcon, sender, subject, money, CODAmount, daysLeft, hasItem, wasRead, wasReturned, textCreated, canReply = GetInboxHeaderInfo(slot);
+				Mail_Table[slot] = {["Name"] = name, ["Count"] = count, ["Sender"] = sender};
+			end
+		end
+
+		if (bool_mail_bdkp_help == true) then
+			if (GetInboxNumItems() > 0) and (Mail_Table ~= nil) and (Price_Table ~= nil) then
+				for slot, Params in pairs(Mail_Table) do
+			
+					if (Params["Name"] ~= nil) then
+						Name = "["..Params["Name"].."]";
+					end
+
+					for id, Price_Params in pairs(Price_Table) do
+						if (Name == Price_Params["itemName"]) then
+					
+							Price = tonumber(Price_Params["Price"]);
+							Count = tonumber(Price_Params["Count"]);
+					
+							if (Count ~= 0) and (Params["Sender"] ~= nil) then
+								Price = Price / Count;
+								Price = Price * tonumber(Params["Count"]);
+							
+								if (Price ~= 0) then
+									DEFAULT_CHAT_FRAME:AddMessage("|c40e0d000BDKP:|r" .. " sender |c0000ff00" .. Params["Sender"] .. "|r can recive |c0000ff00" .. Price .. "|r BDKP (" .. Params["Count"] .. "x " .. Price_Params["itemName"] .. ")");
+								end
+
+							else
+								DEFAULT_CHAT_FRAME:AddMessage("|cffff0000Error:|r Division by zero! Price is not correct.");
+							end
+						end
+					end
+				end
+			end
+
+			if (bool_mail_bdkp_help_first == false) then
+				bool_mail_bdkp_help_first = true;
+				bool_mail_bdkp_help = false;
+			end
+		end
+	end
+end
+
+function Search_Mail(id, count)
+	local Name, Link, Rarity, Level, MinLevel, Type, SubType, StackCount = GetItemInfo(id);
+
+	for slot, params in pairs(Mail_Table) do
+		if (Name == params["Name"]) and (count == params["Count"]) then
+			return params["Sender"];
+		end
+	end
+end
+
+----------------------------------------
+-- Bags functions
+----------------------------------------
+function Check_Bags(bag_id)
+	if (bag_id == -1) then
+
+		for bag = -1, 11 do
+			for slot = 1, GetContainerNumSlots(bag) do
+				local itemLink = GetContainerItemLink(bag, slot);
+				
+				if (itemLink ~= nil) then
+					local texture, count, locked, quality, readable = GetContainerItemInfo(bag, slot);
+					local _, _, Color, Ltype, id, enchantednt, Suffix = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d*):?(%d*):?(%d*)");
+
+					
+					if (Bags_Table[bag] == nil) then
+						Bags_Table[bag] = {};	
+					end 
+					Bags_Table[bag][slot] = {["id"] = id, ["count"] = count};
+				end
+			end
+		end
+		return;
+	end
+
+	if (bag_id ~= -1) then
+
+		Bags_Table_Buf = {};
+
+		if (bag_id < 12) and (bag_id > -2) then
+			for slot = 1, GetContainerNumSlots(bag_id) do
+				local itemLink = GetContainerItemLink(bag_id, slot);
+				
+				if (itemLink ~= nil) then
+					local texture, count, locked, quality, readable = GetContainerItemInfo(bag_id, slot);
+					local _, _, Color, Ltype, id, enchantednt, Suffix = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d*):?(%d*):?(%d*)");
+
+					Bags_Table_Buf[slot] = {["id"] = id, ["count"] = count};
+				end
+			end
+		end
+
+		for slot, param in pairs(Bags_Table_Buf) do
+			Result = 0;
+			if (Bags_Table[bag_id][slot] == nil) then
+				Change_BDKP(tonumber(param["id"]), tonumber(Bags_Table_Buf[slot]["count"]));
+				Check_Bags(-1);
+				return;
+			else
+				if (Bags_Table[bag_id][slot]["count"] ~= Bags_Table_Buf[slot]["count"]) then
+					Change_BDKP(tonumber(param["id"]), tonumber(Bags_Table_Buf[slot]["count"])-tonumber(Bags_Table[bag_id][slot]["count"]));
+					Check_Bags(-1);
+					return;
+				end
+			end
+		end	
+	end
+end
+
+function Change_BDKP(id, count_input)
+	Sender = Search_Mail(id, count_input);
+	
+	if (Sender ~= nil) then
+		if (BDKP_Table[Sender] == nil) then
+			BDKP_Table[Sender] = 0;
+		end
+		if (BDKP_Log[Sender] == nil) then
+			BDKP_Log[Sender] = {};
+		end
+
+		local Name, Link, Rarity, Level, MinLevel, Type, SubType, StackCount = GetItemInfo(id);
+		Name = "["..Name.."]";
+		for id, Price_Params in pairs(Price_Table) do
+			if (Name == Price_Params["itemName"]) then
+					
+				Price = tonumber(Price_Params["Price"]);
+				Count = tonumber(Price_Params["Count"]);
+					
+				if (Count ~= 0) then
+					Price = (Price / Count) * count_input;
+							
+					if (Price ~= 0) then
+						DEFAULT_CHAT_FRAME:AddMessage("|c40e0d000BDKP:|r" .. " |c0000ff00" .. Sender .. "|r +|c0000ff00" .. Price .. "|r BDKP (" .. count_input .. "x " .. Name .. ")");
+						-- 
+						Timestamp = time();
+						BDKP_Log[Sender][Timestamp] = {["id"] = id, ["Count"] = count_input, ["dkp"] = Price, ["itemName"] = Name};
+						-- 
+						BDKP_Table[Sender] = BDKP_Table[Sender] + Price;
+					end
+				else
+					DEFAULT_CHAT_FRAME:AddMessage("|cffff0000Error:|r Division by zero! Price is not correct.");
+				end
+			end
+		end
+	end
 end
